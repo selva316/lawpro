@@ -21,11 +21,13 @@ class Notation extends CI_Controller {
 	public function index()
 	{
 		$this->load->model('configurationmodel');
+		$this->load->model('notationmodel');
 		$data = array();
 		
 		$data['courtDetails'] = $this->configurationmodel->fetchCourtType();
 		$data['typeOfCitation'] = $this->configurationmodel->fetchTypeOfCitation();
-		
+		$data['status'] = $this->notationmodel->fetchStatus();
+
 		$this->load->view('user/notation',$data);
 	}
 	
@@ -90,22 +92,115 @@ class Notation extends CI_Controller {
 		if(isset($_POST))
 		{
 			$data = array();
-			$data['casename'] = $this->input->post('casename');
-			$data['citation'] = $this->input->post('citation');
+			if($this->input->post('ntype') == '')
+			{
+				
+				$data['casename'] = $this->input->post('casename');
+				$data['citation'] = $this->input->post('citation');
 
-			$data['court_type'] = $this->input->post('court_type');
-			$data['court_name'] = $this->input->post('court_name');
+				$data['judge_name'] = $this->input->post('judge_name');
+				$data['court_name'] = $this->input->post('court_name');
+				$data['casenumber'] = $this->input->post('casenumber');
 
-			$data['year'] = $this->input->post('year');
-			$data['bench'] = $this->input->post('bench');
+				$data['year'] = strtotime($this->input->post('year'));
+				$data['bench'] = $this->input->post('bench');
 
-			$data['facts_of_case'] = $this->input->post('facts_of_case');
-			$data['type'] = $this->input->post('status');
+				$data['facts_of_case'] = $this->input->post('facts_of_case');
+				$data['type'] = $this->input->post('status');
 
-			$this->load->model('notationmodel');
-			$data = $this->notationmodel->createNotation($data);
+				$this->load->model('notationmodel');
+				$data = $this->notationmodel->createNotation($data);
+					
+			}
+			else
+			{
 
+				$data['ntype'] = $this->input->post('ntype');
+				$data['casename'] = $this->input->post('casename');
+				$data['citation'] = $this->input->post('citation');
+
+				$data['judge_name'] = $this->input->post('judge_name');
+				$data['court_name'] = $this->input->post('court_name');
+				$data['casenumber'] = $this->input->post('casenumber');
+
+				$data['year'] = strtotime($this->input->post('year'));
+				$data['bench'] = $this->input->post('bench');
+
+				$data['facts_of_case'] = $this->input->post('facts_of_case');
+				$data['type'] = $this->input->post('status');
+
+				$this->load->model('notationmodel');
+				$data = $this->notationmodel->updateNotation($data);
+			}
+			//$this->load->view('user/homepage');
+			redirect('user/homepage');
 		}
+	}
+
+	public function autoSave()
+	{
+		$output_hashnid = '';
+		if(isset($_POST))
+		{
+			$data = array();
+			if($this->input->post('casename') != '' && $this->input->post('citation') != ''){
+
+				$data['casename'] = $this->input->post('casename');
+				$data['citation'] = $this->input->post('citation');
+
+				if($this->input->post('judge_name') != ''){
+					$data['judge_name'] = $this->input->post('judge_name');
+				}
+
+				if($this->input->post('court_name') != ''){
+					$data['court_name'] = $this->input->post('court_name');
+				}
+				
+				if($this->input->post('casenumber') != ''){
+					$data['casenumber'] = $this->input->post('casenumber');	
+				}
+				
+				if($this->input->post('year')){
+					$data['year'] = strtotime($this->input->post('year'));	
+				}
+				
+				if($this->input->post('bench')){
+					$data['bench'] = $this->input->post('bench');	
+				}
+				
+				if($this->input->post('facts_of_case') != '')
+				{
+					$data['facts_of_case'] = $this->input->post('facts_of_case');	
+				}
+				
+				if($this->input->post('status') != '')
+				{
+					$data['type'] = $this->input->post('status');	
+				}
+				else
+				{
+					$data['type'] = 'draft';	
+				}
+				
+				$notationid = '';
+				if($this->input->post('notationid') != '' && strlen($this->input->post('notationid')) > 0)
+				{
+					$notationid = $this->input->post('notationid');
+				}
+
+				$this->load->model('notationmodel');
+				$output_hashnid = $this->notationmodel->autoSaveNotation($data, $notationid);
+			}
+			echo $output_hashnid;
+		}
+	}
+
+	public function fetchResearchTopic()
+	{
+		$topicname = $this->input->post('topicname');
+		$this->load->model('configurationmodel');
+		$data = $this->configurationmodel->fetchResearchTopic();
+		echo json_encode($data);
 	}
 }
 

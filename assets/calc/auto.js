@@ -68,87 +68,64 @@ $(function () {
 
 function frmvalidation()
 {
-	var name = $('#name').val();
-	var contactno = $('#contactno').val();
-	var address = $('#address').val();
-	var retail_contact = $('#retail_contact').val();
-	var mailid = $('#mailid').val();
-	var tin = $('#tin').val();
-	var cst = $('#cst').val();
-	var salesperson = $('#salesperson').val();
-	var term = $('#term').val();
-	var refnumber = $('#refnumber').val();
-	var quotationdate = $('#quotationdate').val();
-	var itemName_1 = $('#itemName_1').val();
+	var casename = $('#casename').val();
+	var citation = $('#citation').val();
+	var casenumber = $('#casenumber').val();
+	var court_name = $('#court_name').val();
+	var judge_name = $('#judge_name').val();
+	var year = $('#year').val();
+	var bench = $('#bench').val();
+	var status = $('#status').val();
 	var valid=true;
 	
 	var errorstr = '';
 	
-	if(name==''){
+	if(casename==''){
 		valid = false;
-		errorstr += "Enter valid name!"+ "<BR/>";
+		errorstr += "Enter valid Case Name!"+ "<BR/>";
+		$('#divcasename').addClass('has-error');
 	}
 	
-	if(contactno==''){
+	if(citation==''){
 		valid = false;
-		errorstr += "Enter valid Customer Contact Number!"+ "<BR/>";
+		errorstr += "Enter valid Citation Number!"+ "<BR/>";
+		$('#divcitation').addClass('has-error');
 	}
 	
-	if(address==''){
+	if(casenumber==''){
 		valid = false;
-		errorstr += "Enter valid address!"+ "<BR/>";
+		errorstr += "Enter valid Case Number!"+ "<BR/>";
+		$('#divcasenumber').addClass('has-error');
 	}
 	
-	if(retail_contact==''){
+	if(court_name==''){
 		valid = false;
-		errorstr += "Enter valid retail contact!"+ "<BR/>";
+		errorstr += "Enter valid Court Name!"+ "<BR/>";
+		$('#divcourt_name').addClass('has-error');
 	}
 	
-	if(mailid==''){
+	if(judge_name==''){
 		valid = false;
-		errorstr += "Enter valid mail ID!"+ "<BR/>";
+		errorstr += "Enter valid Judge Name!"+ "<BR/>";
+		$('#divjudge_name').addClass('has-error');
 	}
 	
-	if(tin==''){
+	if(year==''){
 		valid = false;
-		errorstr += "Enter valid TIN!"+ "<BR/>";
+		errorstr += "Enter valid Year!"+ "<BR/>";
+		$('#divyear').addClass('has-error');
 	}
 	
-	if(cst==''){
+	if(bench==''){
 		valid = false;
-		errorstr += "Enter valid cst!"+ "<BR/>";
+		errorstr += "Enter valid bench!"+ "<BR/>";
+		$('#divbench').addClass('has-error');
 	}
 	
-	if(salesperson==''){
+	if(status==''){
 		valid = false;
-		errorstr += "Enter valid sale person!"+ "<BR/>";
-	}
-	
-	if(term==''){
-		valid = false;
-		errorstr += "Enter valid term and condition!"+ "<BR/>";
-	}
-	
-	if(term==''){
-		valid = false;
-		errorstr += "Enter valid term and condition!"+ "<BR/>";
-	}
-	
-	
-	if(refnumber==''){
-		valid = false;
-		errorstr += "Enter valid reference number!"+ "<BR/>";
-	}
-	
-	
-	if(quotationdate==''){
-		valid = false;
-		errorstr += "Enter valid Quotation Date!"+ "<BR/>";
-	}
-	
-	if(itemName_1==''){
-		valid = false;
-		errorstr += "Enter valid Description"+ "<BR/>";
+		errorstr += "Enter valid status!"+ "<BR/>";
+		$('#divstatus').addClass('has-error');
 	}
 	
 	if(!valid)
@@ -159,3 +136,28 @@ function frmvalidation()
 	return valid;
 	
 }
+
+	$(":input").keypress(function() {
+		//$('div').removeClass('has-error');
+		eleid = "#div"+$(this).attr('id');
+		$(eleid).removeClass('has-error');
+		
+		inid = "#"+$(this).attr('id');
+		$(inid).removeClass('clsalerttext');
+	});
+	
+	$(":input").mousedown(function() {
+		//$('div').removeClass('has-error');
+		eleid = "#div"+$(this).attr('id');
+		$(eleid).removeClass('has-error');
+		
+		inid = "#"+$(this).attr('id');
+		$(inid).removeClass('clsalerttext');
+	});
+	
+	$("select").mousedown(function() {
+		//$('div').removeClass('has-error');
+		eleid = "#div"+$(this).attr('id');
+		$(eleid).removeClass('has-error');
+	});
+

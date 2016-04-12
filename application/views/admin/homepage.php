@@ -8,335 +8,214 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Homepage</title>
+    <title>Admin Homepage</title>
     <!-- jQuery UI CSS -->
-    <link rel="stylesheet" href="<?php echo base_url();?>assets/jquery/css/jquery-ui.min.css" />
-    <!-- Bootstrap Core CSS -->
-    <link rel="stylesheet" href="<?php echo base_url();?>assets/bootstrap/dist/css/bootstrap.min.css" />
-    <!-- Bootstrap Responsive CSS -->
-    <link rel="stylesheet" href="<?php echo base_url();?>assets/bootstrap/bootstrap-responsive.min.css" />
-    <link rel="stylesheet" href="<?php echo base_url();?>assets/jquery/css/datepicker.css" />
-    <link rel="stylesheet" href="<?php echo base_url();?>assets/datatables/css/jquery.dataTables.css" />
-    
-    <!-- MetisMenu CSS -->
-    <link rel="stylesheet" href="<?php echo base_url();?>assets/metisMenu/dist/metisMenu.min.css" />
-    
-    <link rel="stylesheet" href="<?php echo base_url();?>assets/menu/css/menu.css" />
-    
+	<link rel="stylesheet" href="<?php echo base_url();?>assets/jquery/css/jquery-ui.min.css" />
+	<!-- Bootstrap Core CSS -->
+	<link rel="stylesheet" href="<?php echo base_url();?>assets/bootstrap/dist/css/bootstrap.min.css" />
+	<!-- Bootstrap Responsive CSS -->
+	<link rel="stylesheet" href="<?php echo base_url();?>assets/bootstrap/bootstrap-responsive.min.css" />
+	<link rel="stylesheet" href="<?php echo base_url();?>assets/jquery/css/datepicker.css" />
+	<link rel="stylesheet" href="<?php echo base_url();?>assets/datatables/css/jquery.dataTables.css" />
+	
+	<!-- MetisMenu CSS -->
+	<link rel="stylesheet" href="<?php echo base_url();?>assets/metisMenu/dist/metisMenu.min.css" />
+	
+	<link rel="stylesheet" href="<?php echo base_url();?>assets/menu/css/menu.css" />
+	
     <!-- Timeline CSS -->
-    <link rel="stylesheet" href="<?php echo base_url();?>dist/css/timeline.css" />
+	<link rel="stylesheet" href="<?php echo base_url();?>dist/css/timeline.css" />
     <!-- Custom CSS -->
     
-    <!-- Custom Fonts -->
+	<!-- Custom Fonts -->
     <link href="<?php echo base_url();?>assets/font-awesome/css/font-awesome.min.css" />
-    <link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
-    
-    <style>
-        
-        .navbar{
-            border:none;
-        }
-        
-        .nav {
-            font-size:14px;
-            padding-left:40%;
-        }
-    </style>
+	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+	
+	<style>
+		
+		.navbar{
+			border:none;
+		}
+		
+		.selvanav {
+			font-size:14px;
+			padding-left:40%;
+		}
+
+		.nav {
+			font-size:14px;
+			padding-left:30%;
+		}
+	
+		.tab-pane{
+			margin-top: 10px;
+		}
+	</style>
 </head>
 
 <body>
     <div class="container-fluid">
-        <?php $this->load->view('includes/defaultconfiguration');?>
-        <div class="panel panel-success">
-        <div class="panel-heading">
-            <center><label><b>Type of Court</b></label></center></div>
-        </div>      
-        <div id="page-wrapper">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <div style="margin-left:30px;margin-bottom:10px;">
-                            <button type="button" class="btn btn-large btn-success" id="finalize" data-toggle="modal" data-target="#modalValidate" > Add Court Type <i class="fa fa-close"></i> </button>
-                        </div>
+		<?php  $this->load->view('includes/defaultconfiguration');?>
+		<div class="panel panel-success">
+		<div class="panel-heading">
+			<center><label><b>Notation List</b></label></center></div>
+		</div>		
+		<div id="page-wrapper">
+				<div class="row">
+					<div class="col-lg-12">
+						<div style="margin-left:30px;margin-bottom:10px;">
+							<a href="<?php echo site_url('user/notation');?>" class="btn btn-large btn-success">Add Notation</a>
+						</div>
+					</div>
+					<!-- /.col-lg-12 -->
+				</div>
+				<!-- /.row -->
+				<div class="row-fluid">
+					<div class="span12">
+						<div id="rootwizard">
+							<ul class="nav nav-pills">
+								<li class="active"><a href="#tab1" data-toggle="tab">Draft Notation</a></li>
+								<li class=""><a href="#tab2" data-toggle="tab">User Notation</a></li>
+								<li class=""><a href="#tab3" data-toggle="tab">Notation Edit By Users</a></li>
+								<li class=""><a href="#tab4" data-toggle="tab">Case Details</a></li>
+							</ul>
+							<div class="tab-content">
+								<div class="tab-pane active" id="tab1">
+									<div class="panel panel-info">
+										<div class="panel-heading">Draft Notation List</div>
+										<div class="panel-body">
+											<table id="example" class="display" cellspacing="0" width="100%">
+												<thead>
+													<tr>
+														
+														<th width="10%">Notation ID</th>
+														<th>Case Name</th>
+														<th>Citation</th>
+														<th>Court Name</th>
+														<th>Type</th>
+														<th>Action</th>
+													</tr>
+												</thead>
+												
+											</table>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane" id="tab2">
+									<div class="panel panel-success">
+										<div class="panel-heading">User Notation</div>
+										<div class="panel-body">
+											<table id="notationlist" class="display" cellspacing="0" width="100%">
+												<thead>
+													<tr>
+														<th  width="10%">Notation ID</th>
+														<th>Case Name</th>
+														<th>Citation</th>
+														<th>Created On</th>
+														<th>Created By</th>
+														<th>Type</th>
+														<th>Action</th>
+													</tr>
+												</thead>
+												
+											</table>
+										</div>
+									</div>
+								</div>
+								<div class="tab-pane" id="tab3">
+									Third
+								</div>
+								<div class="tab-pane" id="tab4">
+									Fourth
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				
+			</div>
+			<!-- /#page-wrapper -->
 
-                    </div>
-                    <!-- /.col-lg-12 -->
-                </div>
-                <!-- /.row -->
-                <div class="panel panel-default">
-                    <div class="panel-heading">List of Court Type</div>
-                    <div class="panel-body">
-                        <table id="courtTypeList" class="display" cellspacing="0" width="100%">
-                            <thead>
-                                <tr>
-                                    
-                                    <th>Court Type ID</th>
-                                    <th>Name</th>
-                                    <th>Short Name</th>
-                                    <th>Action</th>
-                                </tr>
-                            </thead>
-                        </table>
-                </div>
-                </div> 
-               
-            </div>
-            <!-- /#page-wrapper -->
-
-        </div>
-        <div class="modal fade" id="modalValidate">
-            <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">New Court Type</h4>
-              </div>
-              <div class="modal-body">
-                
-                <div class="row-fluid">
-                    <div class="span12">
-                        <label class="control-label">Court Name</label>
-                        <input  class="form-control" type="text" id="courtname" name="courtname" value=""/>
-                    </div>
-                </div>
-                <div class="row-fluid">
-                    <div class="span12">
-                        <label class="control-label">Short Name</label>
-                        <input  class="form-control" disabled="true" type="text" id="shortname" name="shortname" value=""/>
-                    </div>
-                </div>
-
-                <div class="clearfix"><br></div>
-                <div class="center modalButton"  style="text-align:center; display:none;">
-                  <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
-                  <button type="button" class="btn btn-primary nonEisValidate" data-dismiss="modal" name="proceedButton" id="proceedButton">Save</button>
-                </div>
-                <div class="clearfix"></div>
-              </div>
-          </div><!--/.modal-content -->
-          </div><!--/.modal-dialog -->
-        </div> <!--/.modal -->
-
-        <!-- Edit Court Type Modal-->
-        <div class="modal fade" id="modalCourtType">
-            <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Edit Court Type</h4>
-              </div>
-              <div class="modal-body">
-                
-                <div class="row-fluid">
-                    <div class="span12">
-                        <label class="control-label">Court Name</label>
-                        <input  class="form-control" type="text" id="editCourtname" name="editCourtname" value=""/>
-                        <input  class="form-control" type="hidden" id="editCTID" name="editCTID" value=""/>
-                    </div>
-                </div>
-                <div class="row-fluid">
-                    <div class="span12">
-                        <label class="control-label">Short Name</label>
-                        <input  class="form-control" type="text" id="editShortname" name="editShortname" value=""/>
-                    </div>
-                </div>
-
-                <div class="clearfix"><br></div>
-                <div class="center modalButton"  style="text-align:center;">
-                  <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
-                  <button type="button" class="btn btn-primary nonEisValidate" data-dismiss="modal" name="editButton" id="editButton">Update</button>
-                </div>
-                <div class="clearfix"></div>
-              </div>
-          </div><!--/.modal-content -->
-          </div><!--/.modal-dialog -->
-        </div> <!--/.modal -->
-        <!-- End Edit Court Type Modal-->
-
+		</div>
+		<!-- /#wrapper -->
     </div>
     <!-- /#wrapper -->
 
     <!-- jQuery -->
     <script src="<?php echo base_url();?>assets/jquery/jquery.js"></script>
-    <script src="<?php echo base_url();?>assets/jquery/jquery-ui.min.js"></script>
+	<script src="<?php echo base_url();?>assets/jquery/jquery-ui.min.js"></script>
 
     <!-- Bootstrap Core JavaScript -->
     <script src="<?php echo base_url();?>assets/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="<?php echo base_url();?>assets/jquery/bootstrap-datepicker.js"></script>
-    <script src="<?php echo base_url();?>assets/menu/js/menuscript.js"></script>
+	<script src="<?php echo base_url();?>assets/jquery/bootstrap-datepicker.js"></script>
+	<script src="<?php echo base_url();?>assets/menu/js/menuscript.js"></script>
+	
+
+	<!-- Pill tab JavaScript -->
+	<script src="<?php echo base_url();?>pillscss/bootstrap.js"></script>
     
-    <script src="<?php echo base_url();?>assets/calc/auto.js"></script>
-    <script src="<?php echo base_url();?>assets/datatables/js/jquery.dataTables.js"></script>
-    
-    <!-- Metis Menu Plugin JavaScript -->
+	<!-- Bootstrap Wizard JavaScript -->
+    <script src="<?php echo base_url();?>assets/bootstrap/bootstrap-wizard.js"></script>
+	
+	<!-- Prettify JavaScript -->	
+	<script src="<?php echo base_url();?>assets/prettify/run_prettify.js"></script>
+
+	<script src="<?php echo base_url();?>assets/calc/auto.js"></script>
+	<script src="<?php echo base_url();?>assets/datatables/js/jquery.dataTables.js"></script>
+	
+	<!-- Metis Menu Plugin JavaScript -->
     <script src="<?php echo base_url();?>assets/metisMenu/dist/metisMenu.min.js"></script>
-    
-    
+	
+	
     <!-- Custom Theme JavaScript -->
     <script src="<?php echo base_url();?>dist/js/sb-admin-2.js"></script>
-    <script>
-    var table;
-    $(document).ready(function() {
-        
-        fnTableCalling();
-        /*
-        $('#courtTypeList tbody').on( 'click', 'tr', function () {
-            var data = table.row(this).data();
-            $("#modalCourtType").show();
-            $("#editButton").css("display","none");
-
-            $.ajax({
-                type: 'post',
-                dataType: "json",
-                url: 'homepage/findCourtTypeDetails',
-                data: {'courtId':data.ctid},
-                success:function(jdata){
-                    var strData = String(jdata.data);
-                    var str = strData.split(",");
-                    if(str[0]!=''){
-                        $("#editButton").css("display","block");
-
-                    }
-                    $("#editCTID").val(str[0]);
-                    $("#editCourtname").val(str[1]);
-                    $("#editShortname").val(str[2])
-                }
-            });
-
-        });*/
-
-        $( "#courtname" ).blur(function() {
-            $.ajax({
-                type: 'post',
-                dataType: "json",
-                url: 'homepage/checkCourtNameAvailable',
-                data: {'courtname':$("#courtname").val()},
-                success:function(data){
-                    //alert(data);
-                    if(data=="true"){
-                        $("#shortname").prop('disabled',false);
-                        //$("#proceedButton").css("display","block");
-                        $("#courtname").css("border","1px solid #ccc");
-                        $("#courtname").css("box-shadow","0 1px 1px rgba(0, 0, 0, 0.075) inset");
-                    }
-                    else{
-                        $("#courtname").css("border","1px solid #c7254e");
-                        $("#courtname").css("box-shadow","0 1px 1px rgba(0, 0, 0, 0.075) inset");
-                    }
-                }
-            });
-        });
-
-
-        $( "#shortname" ).blur(function() {
-            $.ajax({
-                type: 'post',
-                dataType: "json",
-                url: 'homepage/checkCourtTypeShortNameAvailable',
-                data: {'shortname':$("#shortname").val()},
-                success:function(data){
-                    //alert(data);
-                    if(data=="true"){
-                        //$("#courtname").prop('disabled',true);
-                        $(".modalButton").css("display","block");
-                        $("#shortname").css("border","1px solid #ccc");
-                        $("#shortname").css("box-shadow","0 1px 1px rgba(0, 0, 0, 0.075) inset");
-                    }
-                    else{
-                        $("#shortname").css("border","1px solid #c7254e");
-                        $("#shortname").css("box-shadow","0 1px 1px rgba(0, 0, 0, 0.075) inset");
-                    }
-                    
-                }
-            });
-        });
-    });
-
-    $('#proceedButton').click(function () {
-        $.ajax({
-            type: 'post',
-            dataType: "json",
-            url: 'homepage/insertCourtType',
-            data: {'courtname':$("#courtname").val(),'shortname':$("#shortname").val()},
-            success:function(data){
-                //window.location.href="homepage";                
-                fnTableCalling();
-            }
-        });
-    });
-    
-    $('#editButton').click(function () {
-        $.ajax({
-            type: 'post',
-            dataType: "json",
-            url: 'homepage/updateCourtType',
-            data: {'courtname':$("#editCourtname").val(),'shortname':$("#editShortname").val(),'editCTID':$("#editCTID").val()},
-            success:function(data){
-                //window.location.href="homepage";                
-                fnTableCalling();
-            }
-        });
-    });
-
-    $(document).on('click','.editCourtType',function(){
-
-        $("#modalCourtType").modal('show');
-        //var data = table.row(this).data();
-        $("#editButton").css("display","none");
-
-        $.ajax({
-            type: 'post',
-            dataType: "json",
-            url: 'homepage/findCourtTypeDetails',
-            data: {'courtId':$(this).val()},
-            success:function(jdata){
-                var strData = String(jdata.data);
-                var str = strData.split(",");
-                if(str[0]!=''){
-                    $("#editButton").css("display","block");
-
-                }
-                $("#editCTID").val(str[0]);
-                $("#editCourtname").val(str[1]);
-                $("#editShortname").val(str[2])
-            }
-        });
-
-    });
-
-    
-    $(document).on('click','.disableCourtType',function(){
-
-        $.ajax({
-            type: 'post',
-            dataType: "json",
-            url: 'homepage/disableCourtType',
-            data: {'courtId':$(this).val()},
-            success:function(jdata){
-                fnTableCalling();
-            }
-        });
-
-    });
-
-    function fnTableCalling()
-    {
-        $('#courtTypeList').dataTable().fnDestroy();
-        table = $('#courtTypeList').DataTable({
-            "ajax": "homepage/fetchCourtType",
+	<script>
+	$(document).ready(function() {
+		$('#rootwizard').bootstrapWizard({'tabClass': 'nav nav-pills'});	
+		window.prettyPrint && prettyPrint();
+	
+		var table;
+		var notationlist;
+		$('#example').dataTable().fnDestroy();
+        table = $('#example').DataTable({
+            "ajax": "homepage/fetchDraftNotation",
             "columnDefs": [
                         { 
                             "visible": false
                         }
                     ],
             "columns": [
-               { "data": "ctid" },  
-               { "data": "name" },  
-               { "data": "shortname" },  
-               { "data": "disable" }
+               { "data": "notation" },  
+               { "data": "casename" },  
+               { "data": "citation" },  
+               { "data": "court_name" },
+               { "data": "type" },
+               { "data": "action" }
             ]
         });
-    }
-    </script>
+
+        $('#notationlist').dataTable().fnDestroy();
+        notationlist = $('#notationlist').DataTable({
+            "ajax": "homepage/fetchUserNotation",
+            "columnDefs": [
+                        { 
+                            "visible": false
+                        }
+                    ],
+            "columns": [
+               { "data": "notation" },  
+               { "data": "casename" },  
+               { "data": "citation" },  
+               { "data": "date_of_creation" },
+               { "data": "created_by" },
+               { "data": "type" },
+               { "data": "action" }
+            ]
+        });
+
+	});
+	</script>
 </body>
 
 </html>

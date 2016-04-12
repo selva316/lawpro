@@ -4,7 +4,7 @@
     {
 ?>
 <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-    <ul class="nav">
+    <ul class="selvanav">
         <li  class="test">
             <a href="<?php echo site_url('admin/homepage');?>">Home</a>
         </li>
@@ -25,7 +25,7 @@
 
 ?>
 <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
-    <ul class="nav">
+    <ul class="selvanav">
         <li  class="test">
             <a href="<?php echo site_url('user/homepage');?>">Home</a>
         </li>

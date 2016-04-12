@@ -99,10 +99,11 @@ class EditNotation extends CI_Controller {
 			$data['casename'] = $this->input->post('casename');
 			$data['citation'] = $this->input->post('citation');
 
-			$data['court_type'] = $this->input->post('court_type');
+			$data['judge_name'] = $this->input->post('judge_name');
 			$data['court_name'] = $this->input->post('court_name');
+			$data['casenumber'] = $this->input->post('casenumber');
 
-			$data['year'] = $this->input->post('year');
+			$data['year'] = strtotime($this->input->post('year'));
 			$data['bench'] = $this->input->post('bench');
 
 			$data['facts_of_case'] = $this->input->post('facts_of_case');
@@ -110,9 +111,9 @@ class EditNotation extends CI_Controller {
 
 			$this->load->model('notationmodel');
 			$data = $this->notationmodel->updateNotation($data);
-
+			//$this->load->view('user/homepage');
+			redirect('user/homepage');
 		}
-		$this->load->view('user/homepage');
 	}
 
 }

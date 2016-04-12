@@ -12,61 +12,63 @@ a {text-decoration: none;}
     padding: 10px 15px;
     color: #fff;
 }
-.nav {
+.selvanav {
     list-style: none;
      *zoom: 1;
      background:#222;
+     font-size:14px;
+    padding-left:40%;
 }
-.nav:before,
-.nav:after {
+.selvanav:before,
+.selvanav:after {
     content: " "; 
     display: table; 
 }
-.nav:after {
+.selvanav:after {
     clear: both;
 }
-.nav ul {
+.selvanav ul {
     list-style: none;
     width: 9em;
 }
-.nav a {
+.selvanav a {
     padding: 10px 15px;
     color:#fff;
 }
-.nav li {
+.selvanav li {
     position: relative;
 }
-.nav > li {
+.selvanav > li {
     float: left;
     border-top: 1px solid #222;
 }
-.nav > li > .parent {
+.selvanav > li > .parent {
     background-image: url("images/downArrow.png");
     background-repeat: no-repeat;
     background-position: right;
 }
-.nav > li > a {
+.selvanav > li > a {
     display: block;
 }
-.nav li  ul {
+.selvanav li  ul {
     position: absolute;
     left: -9999px;
 }
-.nav > li.hover > ul {
+.selvanav > li.hover > ul {
     left: 0;
 }
-.nav li li.hover ul {
+.selvanav li li.hover ul {
     left: 100%;
     top: 0;
 }
-.nav li li a {
+.selvanav li li a {
     display: block;
     background: #222;
     position: relative;
     z-index:100;
     border-top: 1px solid #175e4c;
 }
-.nav li li li a {
+.selvanav li li li a {
     background:#222;
     z-index:200;
     border-top: 1px solid #1d7a62;
@@ -76,22 +78,22 @@ a {text-decoration: none;}
     .active {
         display: block;
     }
-    .nav > li {
+    .selvanav > li {
         float: none;
     }
-    .nav > li > .parent {
+    .selvanav > li > .parent {
         background-position: 95% 50%;
     }
-    .nav li li .parent {
+    .selvanav li li .parent {
         background-image: url("images/downArrow.png");
         background-repeat: no-repeat;
         background-position: 95% 50%;
     }
-    .nav ul {
+    .selvanav ul {
         display: block;
         width: 100%;
     }
-   .nav > li.hover > ul , .nav li li.hover ul {
+   .selvanav > li.hover > ul , .selvanav li li.hover ul {
         position: static;
     }
 

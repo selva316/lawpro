@@ -39,11 +39,14 @@
 			font-size:14px;
 			padding-left:40%;
 		}
+
+		.ui-autocomplete {
+			z-index: 9999;
+		}
 	</style>
 </head>
 
 <body>
-	<form name="frminvoice" action="editnotation/update" method="post" onsubmit="return frmvalidation()">
     <div class="container-fluid">
     	<?php $this->load->view('includes/defaultconfiguration');?>
 
@@ -61,13 +64,14 @@
 							<label class="control-label">Case Name: <?php echo $casename; ?></label>
 							<input type="hidden" name="casename" id="casename" value="<?php echo $casename; ?>"/>
 							<input type="hidden" name="ntype" id="ntype" value="<?php echo $notationid; ?>"/>
+							<input type="hidden" name="hashid" id="hashid" value="<?php echo $hashnotationid; ?>"/>
 						</div>
 						<div class="span3">
 							<label class="control-label">Citation: <?php echo $citation; ?></label>
 							<input type="hidden" name="citation" id="citation" value="<?php echo $citation; ?>"/>
 						</div>
 						<div class="span3">
-							<label class="control-label">Court Type: <?php echo $court_type ?></label>
+							<label class="control-label">Court assigned case number: <?php echo $casenumber; ?></label>
 						</div>
 						<div class="span3">
 							<label class="control-label">Court Name: <?php echo $court_name; ?></label>
@@ -76,14 +80,15 @@
 
 					<div class="row-fluid"  style="margin-top:20px;">
 						<div class="span3">
-							<label class="control-label">Court assigned case number: Nil</label>
+							<label class="control-label">Judge Name: <?php echo ucfirst($judge_name); ?></label>
+						</div>
+						<div class="span3">
+							<label class="control-label">Year of Judgement: <?php echo date('d-m-Y',$year); ?></label>
 						</div>
 						<div class="span3">
 							<label class="control-label">Type of Bench: <?php echo $bench; ?></label>
 						</div>
-						<div class="span3">
-							<label class="control-label">Year of Judgement: <?php echo $year; ?></label>
-						</div>
+						
 						<div class="span3">
 							<label  class="control-label" >Status: <?php echo ucfirst($type);?></label>
 						</div>
@@ -184,12 +189,70 @@
 					</div>
             	</div>
             </div>
+            <?php // print_r($this->session); ?>
+            <?php if($type != 'private' && $type != 'draft'){ ?>
+
+	            <div class="row-fluid" style="margin-bottom:10px;">
+					<?php if($type != 'draft'){ ?>
+					<div class="span4" style="text-align:center;">
+						<button type="button" class="btn btn-primary" id="saveAsDraft">
+			                Save as Draft<i class="fa fa-close"></i>
+			            </button>
+					</div>
+					<?php } else {?>
+					<div class="span4" style="text-align:center;">
+					</div>
+					<?php } ?>
+					<?php if($this->session->userdata('role') == "Admin" && $type != 'dbversion') { ?>
+					<div class="span4" style="text-align:center;">
+						<button type="button" class="btn btn-primary" id="dbVersion">
+			                Database Version<i class="fa fa-close"></i>
+			            </button>
+					</div>
+					<?php } ?>
+					<div class="span4" style="text-align:center;">
+						<button type="button" class="btn btn-primary" id="tag" data-toggle="modal" data-target="#modalValidate" >
+			                Tag a Notation<i class="fa fa-close"></i>
+			            </button>
+					</div>
+				</div>
+            <?php
+            }
+			?>      
 		</div>
 			
 			</div>
 			<!-- /#page-wrapper -->
+
+
+		<div class="modal fade" id="modalValidate">
+            <div class="modal-dialog">
+	            <div class="modal-content">
+	              <div class="modal-header">
+	                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	                <h4 class="modal-title">Research topic to tag</h4>
+	              </div>
+	              <div class="modal-body">
+	                
+	                <div class="row-fluid">
+	                    <div class="span12">
+	                        <label class="control-label">Select Reesearch Topic</label>
+	                        <input  class="form-control autocomplete_tag" type="text" id="topicname" name="topicname"  autocomplete="off"  value=""/>
+	                    </div>
+	                </div>
+
+	                <div class="clearfix"><br></div>
+	                <div class="center modalButton"  style="text-align:center;">
+	                  <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
+	                  <button type="button" class="btn btn-primary nonEisValidate" data-dismiss="modal" name="proceedButton" id="proceedButton">Save</button>
+	                </div>
+	                <div class="clearfix"></div>
+	              </div>
+	            </div><!--/.modal-content -->
+            </div><!--/.modal-dialog -->
+        </div> <!--/.modal -->
+
 		</div>
-	</form>		
     <!-- /#wrapper -->
 
     <!-- jQuery -->
@@ -207,6 +270,75 @@
 	<!-- Metis Menu Plugin JavaScript -->
     <script src="<?php echo base_url();?>assets/metisMenu/dist/metisMenu.min.js"></script>
 	
+	<script>
+		$(document).ready(function() {
+			$("#saveAsDraft").click(function(){
+				$.ajax({
+					url : 'viewnotation/saveAsDraft',
+					dataType: "text",
+					method: 'post',
+					data: {
+					   hashid: $("#hashid").val()
+					},
+					success : function(data) {
+						if(data == "Admin")
+							window.location.href="http://localhost:2020/lawyer/admin/homepage";
+						else
+							window.location.href="http://localhost:2020/lawyer/user/homepage";
+					}
+				});
+			});
+
+			$("#dbVersion").click(function(){
+				$.ajax({
+					url : 'viewnotation/dbVersion',
+					dataType: "text",
+					method: 'post',
+					data: {
+					   hashid: $("#hashid").val()
+					},
+					success : function(data) {
+						if(data == "Admin")
+							window.location.href="http://localhost:2020/lawyer/admin/homepage";
+						else
+							window.location.href="http://localhost:2020/lawyer/user/homepage";
+					}
+				});
+			});
+
+			$(document).on('focus','.autocomplete_tag',function(){
+				var topicname = $("#topicname").val();
+				$(this).autocomplete({
+					source: function( request, response ) {
+						$.ajax({
+							url : 'notation/fetchResearchTopic',
+							dataType: "json",
+							method: 'post',
+							data: {
+							   name_startsWith: request.term,
+							   topicname: topicname
+							},
+							 success: function( data ) {
+								 response( $.map( data, function( item ) {
+									return {
+										label: item,
+										value: item,
+										data : item
+									}
+								}));
+							}
+						});
+					},
+					autoFocus: true,	      	
+					minLength: 0,
+					select: function( event, ui ) {
+						
+						$('#topicname').val(ui.item.data);
+					}		      	
+				});
+			});
+		});
+	</script>
 </body>
 
 </html>

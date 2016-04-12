@@ -125,11 +125,10 @@ class Configurationmodel extends CI_Model {
 	public function ajaxcall()
 	{
 		
-		$type = $this->input->post('type');
 		$name = $this->input->post('name_startsWith');
 		$court_type = $this->input->post('court_type');		
 		
-		$query = $this->db->query("select NAME from law_list_of_courts where court_type='$court_type' and (UPPER(name) LIKE '%".strtoupper($name)."%')");
+		$query = $this->db->query("select NAME from law_list_of_courts where (UPPER(name) LIKE '%".strtoupper($name)."%')");
 		$data = array();
 		if ($query->num_rows() > 0)
 		{
@@ -284,6 +283,54 @@ class Configurationmodel extends CI_Model {
 		$dArray = array();
 		array_push($dArray, true);
 		return $dArray;
+	}
+
+	public function fetchResearchTopic()
+	{
+
+		$name = $this->input->post('name_startsWith');
+		$userid = $this->session->userdata('userid');
+		$query = $this->db->query("select topic from law_research_group where (upper(assign_to) like '%".strtoupper($userid)."%') and (UPPER(topic) LIKE '%".strtoupper($name)."%')");
+		$data = array();
+		if ($query->num_rows() > 0)
+		{
+			$result = $query->result_array();
+			foreach($result as $row)
+			{
+				$name = $row['topic'];//i am not want item code i,eeeeeeeeeeee
+				array_push($data, $name);
+			}
+		}
+		return $data;
+		
+	}
+
+	public function fetchUserID($username)
+	{
+		//echo "select * from law_login where name  = '".$username."'";
+		$query = $this->db->query("select * from law_login where NAME  = '".$username."'");
+		$result = $query->result_array();
+		$userid = '';
+		foreach($result as $r)
+		{
+			$userid = $r['USERID'];
+		}
+
+		return $userid;
+	}
+
+	public function fetchUserName($userid)
+	{
+		//echo "select * from law_login where name  = '".$username."'";
+		$query = $this->db->query("select * from law_login where USERID  = '".$userid."'");
+		$result = $query->result_array();
+		$username = '';
+		foreach($result as $r)
+		{
+			$username = $r['NAME'];
+		}
+
+		return $username;
 	}
 }
 

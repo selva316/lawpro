@@ -58,15 +58,24 @@
                 <div class="panel-body">
             		<div class="row-fluid">
 						<div class="span3">
-							<label class="control-label">Case Name</label>
-							<input  class="form-control" type="text" id="casename" name="casename" value=""/>
-							<input type="hidden" name="ntype" id="ntype" value=""/>
+							<div id="divcasename" class="form-group">
+								<label class="control-label">Case Name</label>
+								<input  class="form-control" type="text" id="casename" name="casename" value=""/>
+								<input type="hidden" name="ntype" id="ntype" value=""/>
+							</div>
 						</div>
 						<div class="span3">
-							<label class="control-label">Citation</label>
-							<input  class="form-control" type="text" id="citation" name="citation" value=""/>
+							<div id="divcitation" class="form-group">
+								<label class="control-label">Citation</label>
+								<input  class="form-control" type="text" id="citation" name="citation" value=""/>
+							</div>
 						</div>
 						<div class="span3">
+							<div id="divcasenumber" class="form-group">
+								<label class="control-label">Court assigned case number</label>
+								<input  class="form-control" type="text" id="casenumber" name="casenumber" value=""/>
+							</div>
+							<!--
 							<label class="control-label">Court Type</label>
 							<select  class="form-control" id="court_type" name="court_type">
 								<option value="">Select</option>
@@ -75,36 +84,58 @@
 										echo "<option value='".$row['SHORTNAME']."'>". $row['NAME'] ."</option>";
 									}
 								?>
-							</select>
+							</select>-->
 						</div>
 						<div class="span3">
-							<label class="control-label">Court Name</label>
-							<input  class="form-control autocomplete_txt"  data-type="court_name" type="text" id="court_name" name="court_name" autocomplete="off" value=""/>
+							<div id="divcourt_name" class="form-group">
+								<label class="control-label">Court Name</label>
+								<input  class="form-control autocomplete_txt"  data-type="court_name" type="text" id="court_name" name="court_name" autocomplete="off" value=""/>
+							</div>
 						</div>
 					</div>   
 
 					<div class="row-fluid"  style="margin-top:20px;">
 						<div class="span3">
-							<label class="control-label">Court assigned case number</label>
-							<input  class="form-control" type="text" id="casenumber" name="casenumber" value=""/>
+							<div id="divjudge_name" class="form-group">
+								<label class="control-label">Name of Judge</label>
+								<input  class="form-control" type="text" id="judge_name" name="judge_name" value=""/>
+							</div>
 						</div>
 						<div class="span3">
-							<label class="control-label">Type of Bench</label>
-							<input  class="form-control" type="text" id="bench" name="bench" value=""/>
+							<div id="divyear" class="form-group">
+								<label class="control-label">Year of Judgement</label>
+								<input  class="form-control form_datetime" type="text" id="year" name="year" value=""/>
+							</div>
 						</div>
 						<div class="span3">
-							<label class="control-label">Year of Judgement</label>
-							<input  class="form-control" type="text" id="year" name="year" value=""/>
+							<div id="divbench" class="form-group">
+								<label class="control-label">Type of Bench</label>
+								<input  class="form-control" type="text" id="bench" name="bench" value=""/>
+							</div>
 						</div>
 						<div class="span3">
-							<label  class="control-label" >Status</label>
-							<select  class="form-control"  id="status" name="status">
-								<option value="">Select</option>
-								<option value="draft">Draft</option>
-								<option value="dbversion">DB Version</option>
-								<option value="public">Public</option>
-								<option value="private">Private</option>
-							</select>
+							<div id="divstatus" class="form-group">
+								<label  class="control-label" >Status</label>
+								<select  class="form-control"  id="status" name="status">
+									<option value="">Select</option>
+									<?php 
+									foreach ($status as $row) {
+										$role = $this->session->userdata('role');
+
+										if(('dbversion' == $row['NAME']))
+										{
+											if($role == 'Admin')
+												echo "<option value='".$row['NAME']."'>". $row['DESCRIPTION'] ."</option>";
+											else
+												continue;
+										}
+										else
+											echo "<option value='".$row['NAME']."'>". $row['DESCRIPTION'] ."</option>";
+
+									}
+								?>
+								</select>
+							</div>
 						</div>
 					</div> 
 
@@ -252,13 +283,18 @@
 			}]
 		});
 		
+		$('.form_datetime').datepicker({
+		    //format: 'YYYY-MM-DD',
+		    dateFormat: 'dd-mm-yy',
+		    autoclose : true
+		});
+
 		setInterval(ajaxCreateCitation, 60000);
 		//$("#court_name")
 	});
 
 	$(document).on('focus','.autocomplete_txt',function(){
 		var type = $(this).data('type');
-		var court_type = $("#court_type").val();
 		$(this).autocomplete({
 			source: function( request, response ) {
 				$.ajax({
@@ -267,8 +303,7 @@
 					method: 'post',
 					data: {
 					   name_startsWith: request.term,
-					   type: type,
-					   court_type:court_type
+					   type: type
 					},
 					 success: function( data ) {
 						 response( $.map( data, function( item ) {
@@ -405,10 +440,42 @@
 	function ajaxCreateCitation(){
 		
 		var citation = $("#citation").val();
-		var caseName = $("#casename").val();
-		if(citation != '' && caseName !='')
+		var casename = $("#casename").val();
+		if(citation != '' && casename !='')
 		{
-			alert(citation)
+			casename  = $("#casename").val();
+			citation = $("#citation").val();
+			var judge_name = $("#judge_name").val();
+			var court_name = $("#court_name").val();
+			var casenumber = $("#casenumber").val();
+			var year = $("#year").val();
+
+			var bench = $("#bench").val();
+			var facts_of_case = $("#facts_of_case").val();
+			var status = $("#status").val();
+			var notationid = $("#ntype").val();
+
+			$.ajax({
+				url : 'notation/autoSave',
+				dataType: "text",
+				method: 'post',
+				data: {
+				   casename: casename, 
+				   citation:citation, 
+				   judge_name: judge_name, 
+				   court_name:court_name, 
+				   casenumber:casenumber, 
+				   year:year, 
+				   bench:bench, 
+				   facts_of_case:facts_of_case, 
+				   status:status, 
+				   notationid:notationid
+				},
+				success: function( msg ) {
+					//alert(msg);
+					$("#ntype").val(msg);
+				}
+			});
 		}
 	}
 
@@ -429,12 +496,13 @@
 				success: function( data ) {
 					if(data == "false"){
 						$("#casename").val('');
-						$("#ntype").val();
+						$("#ntype").val('');
 					}
+					/*
 					else
 					{
 						$("#ntype").val("Draft");	
-					}
+					}*/
 				}
 			});	
 		}
@@ -453,12 +521,13 @@
 				success: function( data ) {
 					if(data == "false"){
 						$("#citation").val('');
-						$("#ntype").val();
+						$("#ntype").val('');
 					}
+					/*
 					else
 					{
 						$("#ntype").val("Draft");	
-					}
+					}*/
 				}
 			});	
 		}

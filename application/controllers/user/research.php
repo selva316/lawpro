@@ -39,16 +39,33 @@ class Research extends CI_Controller {
 			foreach($result as $r)
 			{	
 				if($r['DISABLE'] == 'N')
-				$statusStr = '<button type="button" class="btn btn-small btn-success editCourtType" value="'.$r['RID'].'"  >Edit</button>'.'<button type="button" style="margin-left:25px;" class="btn btn-small btn-danger disableCourtType" value="'.$r['RID'].'" >Disable</button>';
+				$statusStr = '<button type="button" class="btn btn-small btn-success editResearchGroup" value="'.$r['RID'].'"  >Edit</button>'.'<button type="button" style="margin-left:25px;" class="btn btn-small btn-danger disableCourtType" value="'.$r['RID'].'" >Disable</button>';
 			else
-				$statusStr = '<button type="button" class="btn btn-small btn-success editCourtType" value="'.$r['RID'].'"  >Edit</button>'.'<button type="button" style="margin-left:25px;" class="btn btn-small btn-warning disableCourtType" value="'.$r['RID'].'" >Enable</button>';
+				$statusStr = '<button type="button" class="btn btn-small btn-success editResearchGroup" value="'.$r['RID'].'"  >Edit</button>'.'<button type="button" style="margin-left:25px;" class="btn btn-small btn-warning disableCourtType" value="'.$r['RID'].'" >Enable</button>';
+
+				$assign_userid = '';
+				if($r['ASSIGN_TO'] != "" )
+				{
+					$assignTo = $r['ASSIGN_TO'];
+
+					$source_array = explode(',', $assignTo);
+					$userList = array_map('trim', $source_array);
+
+					
+					foreach ($userList as $username) {
+						//echo $username."<BR/>";
+						
+						$assign_userid .= $this->researchmodel->fetchUserName($username);
+						$assign_userid .=',';
+					}
+				}
 
 				$details = array(
 					'rid'=>$r['RID'],
 					'topic'=>$r['TOPIC'],
-					'belongs_to'=>$r['BELONGS_TO'],
+					'belongs_to'=>$this->researchmodel->fetchUserName($r['BELONGS_TO']),
 					'timestamp' => date("d-m-Y", $r['TIMESTAMP']),
-					'assign' => $r['ASSIGN_TO'],
+					'assign' => $assign_userid,
 					'action' => $statusStr
 				);
 				
@@ -87,7 +104,8 @@ class Research extends CI_Controller {
 			$details = array(
 					'userid'=>$r['USERID'],
 					'firstname'=>$r['FIRSTNAME'],
-					'lastname'=>$r['LASTNAME']
+					'lastname'=>$r['LASTNAME'],
+					'fullname'=>$r['NAME']
 				);
 			array_push($detailsList, $details);
 		}
@@ -101,18 +119,69 @@ class Research extends CI_Controller {
 	{
 		$topicname = $this->input->post('topicname');
 		$assignTo = $this->input->post('assignTo');
-		$data = array();
-
-		$data['TOPIC'] = $topicname;
-		$data['BELONGS_TO'] = $this->session->userdata('userid');
-		$data['TIMESTAMP'] = time();
-		$data['ASSIGN_TO'] = $assignTo;
+		$userid = $this->session->userdata('userid');
 
 		$this->load->model('researchmodel');
-		$result =  $this->researchmodel->createResearchGroup($data);
-			
-		//echo json_encode();
+
+		if($assignTo != "" && $assignTo != "null")
+		{
+			$source_array = explode('!', $assignTo);
+			$userList = array_map('trim', $source_array);
+			$this->researchmodel->deleteResearchGroupUser($userid);
+
+			$assign_userid = '';
+			foreach ($userList as $username) {
+				//echo $username."<BR/>";
+				
+				$assign_userid .= $this->researchmodel->fetchUserID($username);
+				$assign_userid .=',';
+			}
+
+			$data = array();
+
+			$data['TOPIC'] = $topicname;
+			$data['BELONGS_TO'] = $userid;
+			$data['TIMESTAMP'] = time();
+			$data['ASSIGN_TO'] = $assign_userid;
+
+			//$this->load->model('researchmodel');
+			$result =  $this->researchmodel->createResearchGroup($data);
+		}
+		
+		$data = array();
+		$data['BELONGS_TO'] = $this->session->userdata('userid');
+		
+		echo json_encode($data);
 	}
+
+	public function fetchAssignUsers()
+	{
+		$rid = $this->input->post('rid');
+
+		$this->load->model('researchmodel');
+		$assignTo =  $this->researchmodel->fetchResearchUsers($rid);
+		
+		$detailsList = array();
+		
+		$assignTo = substr($assignTo, 0, -1);
+		$source_array = explode(',', $assignTo);
+		$userList = array_map('trim', $source_array);
+
+		
+		foreach ($userList as $username) {
+			//echo $username."<BR/>";
+			
+			$details = array(
+					'name'=>$this->researchmodel->fetchUserName($username)
+				);
+			array_push($detailsList, $details);
+		}
+
+		$collectionDetails= array('data'=>$detailsList);
+
+		echo json_encode($collectionDetails);	
+	}
+
 }
 
 /* End of file homepage.php */

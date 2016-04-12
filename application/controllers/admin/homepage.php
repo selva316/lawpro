@@ -6,6 +6,9 @@ class Homepage extends CI_Controller {
 	{
         parent::__construct();
 		
+		$this->load->database();
+		$this->load->helper('url');
+		
 		ob_start();
 		header('Expires: Sat, 26 Jul 1997 05:00:00 GMT');
 		header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0');
@@ -17,84 +20,95 @@ class Homepage extends CI_Controller {
 	
 	public function index()
 	{
+		//$data['main_content'] = 'login_form';
+		//$this->load->view('includes/template',$data);
 		$data = array();
-		$this->load->model('configurationmodel');
-		$data['result'] = $this->configurationmodel->fetchCourtType();
 		
 		$this->load->view('admin/homepage',$data);
 	}
-	
-	public function checkCourtNameAvailable()
-	{
-		$this->load->model('configurationmodel');
-		$data =  $this->configurationmodel->courtNameAvailable($this->input->post('courtname'));
-		echo json_encode($data);
-	}
 
-	public function checkCourtTypeShortNameAvailable()
+	public function fetchDraftNotation()
 	{
-		$this->load->model('configurationmodel');
-		$data =  $this->configurationmodel->courtShortNameAvailable($this->input->post('shortname'));
-		echo json_encode($data);
-	}
-	
-	public function insertCourtType()
-	{
-		$this->load->model('configurationmodel');
-		$data =  $this->configurationmodel->insertCourtType($this->input->post('courtname'),$this->input->post('shortname'));
-		echo json_encode($data);
-	}
-
-	public function updateCourtType()
-	{
-		$this->load->model('configurationmodel');
-		$data =  $this->configurationmodel->updateCourtType($this->input->post('courtname'),$this->input->post('shortname'),$this->input->post('editCTID'));
-		echo json_encode($data);
-	}
-
-	public function findCourtTypeDetails()
-	{
-		$this->load->model('configurationmodel');
-		$data =  $this->configurationmodel->courtTypeDetails($this->input->post('courtId'));
-		$collectionDetails= array('data'=>$data);
-		echo json_encode($collectionDetails);
-	}
-
-	public function disableCourtType()
-	{
-		$this->load->model('configurationmodel');
-		$data =  $this->configurationmodel->disableCourtType($this->input->post('courtId'));
-		$disableDetails= array('data'=>$data);
-		echo json_encode($disableDetails);
-	}
-
-	public function fetchCourtType()
-	{
-		$this->load->model('configurationmodel');
-		$result =  $this->configurationmodel->fetchCourtType();
-		$detailsList = array();
-		foreach($result as $r)
+		$this->load->model('notationmodel');
+		$result = $this->notationmodel->fetchStatusNotation('draft');
+		
+		if($result)
 		{
-			if($r['DISABLE'] == 'N')
-				$statusStr = '<button type="button" class="btn btn-small btn-success editCourtType" value="'.$r['CTID'].'"  >Edit</button>'.'<button type="button" style="margin-left:25px;" class="btn btn-small btn-danger disableCourtType" value="'.$r['CTID'].'" >Disable</button>';
-			else
-				$statusStr = '<button type="button" class="btn btn-small btn-success editCourtType" value="'.$r['CTID'].'"  >Edit</button>'.'<button type="button" style="margin-left:25px;" class="btn btn-small btn-warning disableCourtType" value="'.$r['CTID'].'" >Enable</button>';
-
-			$details = array(
-				'ctid'=>$r['CTID'],
-				'name'=>$r['NAME'],
-				'shortname'=>$r['SHORTNAME'],
-				'disable' => $statusStr
-				//'disable' => '<div id="infoView'.$r['CTID'].'"> <a class="btn btn-xs btn-success editCourtType" data-toggle="modal" href="javascript:editView(\''.$r['CTID'].'\')"> <span class="glyphicon glyphicon-eye-open"></span> </a> <a class="btn btn-xs btn-danger" href="javascript:infoView(\''.$r['CTID'].'\')"> <span class="glyphicon glyphicon-eye-open"></span> </a> </div>'
-			);
+			$detailsList = array();
+			foreach($result as $r)
+			{
+				$details = array(
+					//'notation'=>$r['NOTATIONID'],
+					'notation'=>"<a  style='margin-left:10px;' target='_blank' href=".site_url('user/viewnotation')."?nid=".$r['HASHNOTATIONID'].">".$r['NOTATIONID']."</a>",
+					'casename'=>$r['CASENAME'],
+					'citation'=>$r['CITATION'],
+					'court_name' => $r['COURT_NAME'],
+					'type' => ucfirst($r['TYPE']),
+					'action' => "<a href=".site_url('user/editnotation')."?nid=".$r['HASHNOTATIONID']."><span class='glyphicon glyphicon-pencil'></span></a>"."<a  style='margin-left:10px;' href=".site_url('user/viewnotation')."?nid=".$r['HASHNOTATIONID']."><span class='glyphicon glyphicon-eye-open'></span></a>"
+					//'disable' => '<div id="infoView'.$r['CTID'].'"> <a class="btn btn-xs btn-success editCourtType" data-toggle="modal" href="javascript:editView(\''.$r['CTID'].'\')"> <span class="glyphicon glyphicon-eye-open"></span> </a> <a class="btn btn-xs btn-danger" href="javascript:infoView(\''.$r['CTID'].'\')"> <span class="glyphicon glyphicon-eye-open"></span> </a> </div>'
+				);
+				
+				array_push($detailsList, $details);
+			}
 			
-			array_push($detailsList, $details);
+			$collectionDetails= array('data'=>$detailsList);
+			echo json_encode($collectionDetails);
+		}
+		else
+		{
+			$detailsList = array();
+			$collectionDetails= array('data'=>$detailsList);
+			echo json_encode($collectionDetails);		
 		}
 		
-		$collectionDetails= array('data'=>$detailsList);
-		
-		echo json_encode($collectionDetails);
 	}
+	
+	public function fetchUserNotation()
+	{
+		$this->load->model('notationmodel');
+		$this->load->model('configurationmodel');
+		$result = $this->notationmodel->fetchNewUserNotation();
+		
+		if($result)
+		{
+			$detailsList = array();
+
+			foreach($result as $r)
+			{
+				$actionStr = '';
+				if($r['CREATED_BY'] == $this->session->userdata('userid'))
+				{
+					$actionStr .= "<a href=".site_url('user/editnotation')."?nid=".$r['HASHNOTATIONID']."><span class='glyphicon glyphicon-pencil'></span></a>"; 
+				}
+				$actionStr .= "<a  style='margin-left:10px;' href=".site_url('user/viewnotation')."?nid=".$r['HASHNOTATIONID']."><span class='glyphicon glyphicon-eye-open'></span></a>";
+
+				$details = array(
+					'notation'=>"<a  style='margin-left:10px;' target='_blank' href=".site_url('user/viewnotation')."?nid=".$r['HASHNOTATIONID'].">".$r['NOTATIONID']."</a>",
+					'casename'=>$r['CASENAME'],
+					'citation'=>$r['CITATION'],
+					//'court_name' => $r['COURT_NAME'],
+					'date_of_creation' => date('d-m-Y',$r['CREATED_ON']),
+					'created_by' => $this->configurationmodel->fetchUserName($r['CREATED_BY']),
+					'type' => ucfirst($r['TYPE']),
+					'action' => $actionStr
+				);
+				
+				array_push($detailsList, $details);
+			}
+			
+			$collectionDetails= array('data'=>$detailsList);
+
+			echo json_encode($collectionDetails);
+	
+		}
+		else
+		{
+			$detailsList = array();
+			$collectionDetails= array('data'=>$detailsList);
+			echo json_encode($collectionDetails);		
+		}
+		
+	}	
 }
 
 /* End of file homepage.php */

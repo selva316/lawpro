@@ -61,7 +61,7 @@
 							<label class="control-label">Case Name</label>
 							<input  class="form-control" type="text" disabled="true" value="<?php echo $casename; ?>"/>
 							<input type="hidden" name="casename" id="casename" value="<?php echo $casename; ?>"/>
-							<input type="hidden" name="ntype" id="ntype" value="<?php echo $notationid; ?>"/>
+							<input type="hidden" name="ntype" id="ntype" value="<?php echo $hashnotationid; ?>"/>
 						</div>
 						<div class="span3">
 							<label class="control-label">Citation</label>
@@ -69,7 +69,11 @@
 							<input type="hidden" name="citation" id="citation" value="<?php echo $citation; ?>"/>
 						</div>
 						<div class="span3">
-							<label class="control-label">Court Type</label>
+							<div id="divcasenumber" class="form-group">
+								<label class="control-label">Court assigned case number</label>
+								<input  class="form-control" type="text" id="casenumber" name="casenumber" value="<?php echo $casenumber; ?>"/>
+							</div>
+							<!--<label class="control-label">Court Type</label>
 							<select  class="form-control" id="court_type" name="court_type">
 								<option value="">Select</option>
 								<?php 
@@ -80,7 +84,7 @@
 											echo "<option value='".$row['SHORTNAME']."'>". $row['NAME'] ."</option>";
 									}
 								?>
-							</select>
+							</select>-->
 						</div>
 						<div class="span3">
 							<label class="control-label">Court Name</label>
@@ -90,16 +94,22 @@
 
 					<div class="row-fluid"  style="margin-top:20px;">
 						<div class="span3">
-							<label class="control-label">Court assigned case number</label>
-							<input  class="form-control" type="text" id="casenumber" name="casenumber" value=""/>
+							<div id="divjudge_name" class="form-group">
+								<label class="control-label">Name of Judge</label>
+								<input  class="form-control" type="text" id="judge_name" name="judge_name" value="<?php echo $judge_name; ?>"/>
+							</div>
 						</div>
 						<div class="span3">
-							<label class="control-label">Type of Bench</label>
-							<input  class="form-control" type="text" id="bench" name="bench" value="<?php echo $bench; ?>"/>
+							<div id="divyear" class="form-group">
+								<label class="control-label">Year of Judgement</label>
+								<input  class="form-control form_datetime" type="text" id="year" name="year" value="<?php echo date('d-m-Y',$year); ?>"/>
+							</div>
 						</div>
 						<div class="span3">
-							<label class="control-label">Year of Judgement</label>
-							<input  class="form-control" type="text" id="year" name="year" value="<?php echo $year; ?>"/>
+							<div id="divbench" class="form-group">
+								<label class="control-label">Type of Bench</label>
+								<input  class="form-control" type="text" id="bench" name="bench" value="<?php echo $bench; ?>"/>
+							</div>
 						</div>
 						<div class="span3">
 							<label  class="control-label" >Status</label>
@@ -107,10 +117,30 @@
 								<option value="">Select</option>
 								<?php 
 									foreach ($status as $row) {
+										$role = $this->session->userdata('role');
 										if($type == $row['NAME'])
-											echo "<option selected value='".$row['NAME']."'>". $row['DESCRIPTION'] ."</option>";
-										else
-											echo "<option value='".$row['NAME']."'>". $row['DESCRIPTION'] ."</option>";
+										{
+											if(('dbversion' == $row['NAME']))
+											{
+												if($role == 'Admin')
+													echo "<option selected value='".$row['NAME']."'>". $row['DESCRIPTION'] ."</option>";
+												else
+													continue;
+											}
+											else
+												echo "<option selected value='".$row['NAME']."'>". $row['DESCRIPTION'] ."</option>";
+										}
+										else{
+											if(('dbversion' == $row['NAME']))
+											{
+												if($role == 'Admin')
+													echo "<option value='".$row['NAME']."'>". $row['DESCRIPTION'] ."</option>";
+												else
+													continue;
+											}
+											else
+												echo "<option value='".$row['NAME']."'>". $row['DESCRIPTION'] ."</option>";
+										}
 									}
 								?>
 							</select>
@@ -281,6 +311,12 @@
 			}]
 		});
 		
+
+		$('.form_datetime').datepicker({
+		    //format: 'YYYY-MM-DD',
+		    dateFormat: 'dd-mm-yy',
+		    autoclose : true
+		});
 		//setInterval(ajaxCreateCitation, 60000);
 		//$("#court_name")
 	});

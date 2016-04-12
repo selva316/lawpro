@@ -192,6 +192,8 @@
 		            success:function(data){
 		                //window.location.href="homepage";                
 		                fnResearchCalling();
+		                $("#topicname").val('');
+		                $("#assignTo").val('');
 		            }
 		        });
 			}
@@ -208,7 +210,7 @@
 	                 success: function(data) {
 	                        response($.map(data, function(item) {
 	                             return {
-	                                 label: item.firstname,
+	                                 label: item.fullname,
 	                                 id: item.userid
 	                                };
 	                         }));
@@ -222,6 +224,26 @@
 		delimiter: '!'
 		});
 
+	});
+
+	$(document).on('click','.editResearchGroup',function(){
+//		alert($(this).val());
+
+		    $.ajax({
+		    	type:"POST",
+		       url: "research/fetchAssignUsers",
+		       dataType: "json",
+		       data:{rid:$(this).val()},
+		       success: function(data) {
+		          
+		            console.log(data)
+		            $('#assignTo').tokenfield('setTokens', data.name);
+		            //$('#userName').tokenfield('createToken', data.name);
+		           }
+		    });
+			
+
+		$("#modalValidate").modal('show');
 	});
 
 	function fnResearchCalling()
@@ -244,6 +266,8 @@
             ]
         });
 	}
+
+
 	</script>
 </body>
 

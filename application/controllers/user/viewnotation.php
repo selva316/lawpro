@@ -30,7 +30,20 @@ class ViewNotation extends CI_Controller {
 		//print_r($data);
 		$this->load->view('user/viewNotation',$data);
 	}
+
+	public function saveAsDraft()
+	{
+		$this->load->model('notationmodel');
+		$data = $this->notationmodel->saveAsDraft();
+		return $this->session->userdata('role');
+	}
 	
+	public function dbVersion()
+	{
+		$this->load->model('notationmodel');
+		$data = $this->notationmodel->dbVersion();
+		return $this->session->userdata('role');
+	}
 }
 
 /* End of file homepage.php */

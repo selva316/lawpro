@@ -49,6 +49,54 @@ class Researchmodel extends CI_Model {
 		$this->db->set('RID', $rid);
 		$this->db->update('law_research_group');
 	}
+
+	public function deleteResearchGroupUser($userID)
+	{
+		$this->db->where('BELONGS_TO', $userID);
+		$this->db->delete('law_research_group'); 		
+	}
+
+	public function fetchUserID($username)
+	{
+		//echo "select * from law_login where name  = '".$username."'";
+		$query = $this->db->query("select * from law_login where NAME  = '".$username."'");
+		$result = $query->result_array();
+		$userid = '';
+		foreach($result as $r)
+		{
+			$userid = $r['USERID'];
+		}
+
+		return $userid;
+	}
+
+	public function fetchUserName($userid)
+	{
+		//echo "select * from law_login where name  = '".$username."'";
+		$query = $this->db->query("select * from law_login where USERID  = '".$userid."'");
+		$result = $query->result_array();
+		$username = '';
+		foreach($result as $r)
+		{
+			$username = $r['NAME'];
+		}
+
+		return $username;
+	}
+
+	public function fetchResearchUsers($rid)
+	{
+		$query = $this->db->query("select * from law_research_group where RID  = '".$rid."'");
+		$result = $query->result_array();
+		$username = '';
+		foreach($result as $r)
+		{
+			$username = $r['ASSIGN_TO'];
+		}
+
+		return $username;
+	}
+
 }
 /* End of file Logindetailsmodel.php */
 /* Location: ./application/models/Logindetailsmodel.php */

@@ -21,8 +21,7 @@
     <!-- Custom CSS -->
     <link rel="stylesheet" href="<?php echo base_url();?>dist/css/sb-admin-2.css" />
 	<!-- Custom Fonts -->
-    <link href="<?php echo base_url();?>assets/font-awesome/css/font-awesome.min.css" />
-	<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+    <link href="<?php echo base_url();?>assets/font-awesome/css/font-awesome.min.css"  rel="stylesheet" />
 
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
